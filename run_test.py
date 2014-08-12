@@ -7,7 +7,7 @@ from action_runner import ActionRunner
 def main():
     print 'This is example!'
 
-    for var in ['TEST_PRE_VAR', 'TEST_VAR', 'TEST_POST_VAR']:
+    for var in ['TEST_PRE_VAR', 'TEST_VAR', 'TEST_POST_VAR', 'TEAM']:
         if var in os.environ:
             print '[%s] is [%s]' % (var, os.environ[var])
         else:
@@ -16,7 +16,7 @@ def main():
     runner = ActionRunner()
     runner.do_test_pre().do_test().do_test_post().run()
 
-    for var in ['TEST_PRE_VAR', 'TEST_VAR', 'TEST_POST_VAR']:
+    for var in ['TEST_PRE_VAR', 'TEST_VAR', 'TEST_POST_VAR', 'TEAM']:
         if var in os.environ:
             print '[%s] is [%s]' % (var, os.environ[var])
         else:

@@ -60,6 +60,9 @@ class ActionRunner(object):
     @action
     def do_test_pre(self, action=False):
         if action:
+            self.pre_commands.append('virtualenv .env; source .env/bin/activate; pip install mozdownload')
+            self.pre_commands.append('mozdownload -h')
+            self.pre_commands.append('export TEAM=MOZTWQA')
             self.pre_commands.append('./test_pre.sh')
         return self
 
@@ -74,6 +77,7 @@ class ActionRunner(object):
     @action
     def do_test_post(self, action=False):
         if action:
+            self.post_commands.append('mozdownload -h')
             self.post_commands.append('./test_post.sh')
         return self
 
@@ -139,9 +143,12 @@ class ActionRunner(object):
 
     def _run_command(self, cmd):
         self.logger.info('Run [%s]' % (cmd, ))
-        #current_process = subprocess.Popen(['bash', '-c', "trap 'env' exit; source \"$1\" > /dev/null 2>&1", '_', cmd],
-        current_process = subprocess.Popen(['bash', '-c', "trap 'echo \"#####__EXIT__#####__EXIT__#####\"; env' exit; source \"$1\"", '_', cmd],
-                                           shell=False, stdout=subprocess.PIPE)
+        if cmd.startswith('./') and cmd.endswith('.sh'):
+            current_process = subprocess.Popen(['bash', '-c', "trap 'echo \"#####__EXIT__#####__EXIT__#####\"; env' exit; source %s" % cmd],
+                                               shell=False, stdout=subprocess.PIPE)
+        else:
+            current_process = subprocess.Popen(['bash', '-c', "trap 'echo \"#####__EXIT__#####__EXIT__#####\"; env' exit; %s" % cmd],
+                                               shell=False, stdout=subprocess.PIPE)
         output_vars = current_process.communicate()[0]
         output, env_vars = output_vars.split('#####__EXIT__#####__EXIT__#####\n')
         self.logger.info('Output:\n%s' % output)
