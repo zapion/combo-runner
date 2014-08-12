@@ -44,7 +44,7 @@ class ActionRunner(object):
 
     def action(func):
         def func_wrapper(self):
-            if self.settings.has_key(func.__name__):
+            if func.__name__ in self.settings:
                 if self.settings[func.__name__]:
                     self.logger.debug('The setting [%s] is true.' % func.__name__)
                     return func(self, action=True)
