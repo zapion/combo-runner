@@ -3,11 +3,13 @@ import sys
 import json
 import logging
 import subprocess
-
+import action_decorator
 from argument_parser import RunTestParser
 
 
-class ActionRunner(object):
+class BaseActionRunner(object):
+
+    action = action_decorator.action
 
     def __init__(self):
         # setup logger
@@ -41,105 +43,6 @@ class ActionRunner(object):
             self.parser.print_help()
         self.logger.info('Loading settings from %s' % (settings_file,))
         self.settings = json.load(open(settings_file))
-
-    def action(func):
-        def func_wrapper(self):
-            if func.__name__ in self.settings:
-                if self.settings[func.__name__]:
-                    self.logger.debug('The setting [%s] is true.' % func.__name__)
-                    return func(self, action=True)
-                else:
-                    self.logger.debug('The setting [%s] is false.' % func.__name__)
-                    return func(self, action=False)
-            else:
-                self.logger.debug('There is no [%s] in settings file.' % func.__name__)
-                return func(self, action=False)
-        return func_wrapper
-
-    # TODO: for testing
-    @action
-    def do_test_pre(self, action=False):
-        if action:
-            self.pre_commands.append('virtualenv .env; source .env/bin/activate; pip install mozdownload')
-            self.pre_commands.append('mozdownload -h')
-            self.pre_commands.append('export TEAM=MOZTWQA')
-            self.pre_commands.append('./test_pre.sh')
-        return self
-
-    # TODO: for testing
-    @action
-    def do_test(self, action=False):
-        if action:
-            self.commands.append('./test.sh')
-        return self
-
-    # TODO: for testing
-    @action
-    def do_test_post(self, action=False):
-        if action:
-            self.post_commands.append('mozdownload -h')
-            self.post_commands.append('./test_post.sh')
-        return self
-
-    @action
-    def do_7mobile_settings(self, action=False):
-        if action:
-            self.pre_commands.append('./7mobile_settings.sh')
-        return self
-
-    @action
-    def change_memory_size(self, action=False):
-        if action:
-            self.commands.append('./change_memory_size.sh')
-        return self
-
-    @action
-    def check_resource(self, action=False):
-        if action:
-            self.commands.append('./check_resource.sh')
-        return self
-
-    @action
-    def environment_cleanup(self, action=False):
-        if action:
-            self.post_commands.append('./environment_cleanup.sh')
-        return self
-
-    @action
-    def memory_nfs(self, action=False):
-        if action:
-            self.post_commands.append('./memory_nfs_indep_symbols.sh')
-        return self
-
-    @action
-    def port_detection(self, action=False):
-        if action:
-            self.commands.append('./port_detection.sh')
-        return self
-
-    @action
-    def prerun(self, action=False):
-        if action:
-            self.commands.append('./prerun.sh')
-        return self
-
-    @action
-    def run_mtbf(self, action=False):
-        if action:
-            self.commands.append('./run_mtbf_multi_new.sh')
-        return self
-
-    @action
-    def shallow_flash(self, action=False):
-        if action:
-            self.commands.append('./shallow_flash_indep_symbols.sh')
-        return self
-
-    @action
-    def virtualenv_setup(self, action=False):
-        if action:
-            self.commands.append('./virtualenv_setup_eggpackage.sh')
-        return self
 
     def _run_command(self, cmd):
         self.logger.info('Run [%s]' % (cmd, ))

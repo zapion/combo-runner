@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import os
-from action_runner import ActionRunner
+from test_action_runner import TestActionRunner
 
 
 def main():
@@ -13,7 +13,7 @@ def main():
         else:
             print 'No [%s]' % var
 
-    runner = ActionRunner()
+    runner = TestActionRunner()
     runner.do_test_pre().do_test().do_test_post().run()
 
     for var in ['TEST_PRE_VAR', 'TEST_VAR', 'TEST_POST_VAR', 'TEAM']:
