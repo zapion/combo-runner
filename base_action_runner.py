@@ -21,6 +21,8 @@ class BaseActionRunner(object):
         self.post_commands = []
         # parse the input options
         self.parser = RunTestParser()
+
+    def parse_options(self):
         self.options = self.parser.parse(sys.argv[1:])
         self._load_options()
 
