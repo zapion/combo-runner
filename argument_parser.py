@@ -1,14 +1,14 @@
 import argparse
 import sys
 import textwrap
-from argparse import RawTextHelpFormatter
+from argparse import ArgumentDefaultsHelpFormatter
 
 
 class RunTestParser(object):
 
     def __init__(self):
         self.parser = argparse.ArgumentParser(description='Test Runner for Gaiatest/MTBF by TWQA',
-            formatter_class=RawTextHelpFormatter,
+            formatter_class=ArgumentDefaultsHelpFormatter,
             epilog=textwrap.dedent('''\
             example:
               $ ./run_test.py
