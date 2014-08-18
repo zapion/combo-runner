@@ -1,2 +1,8 @@
 *.pyc
 *~
+
+B2G-flash-tool/*
+gaia/
+
+testvars.json
+
