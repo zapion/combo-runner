@@ -6,8 +6,6 @@ from gaiatest_desktopb2g_action_runner import GaiatestDesktopActionRunner
 
 def main():
     runner = GaiatestDesktopActionRunner()
-    # parse options
-    runner.parse_options()
     # setup the platform and branch
     runner.set_platform(GaiatestDesktopActionRunner.PLATFORM_LINUX_64)
     runner.set_b2g_branch('master', 'master')
