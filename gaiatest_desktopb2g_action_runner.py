@@ -12,7 +12,6 @@ class GaiatestDesktopActionRunner(BaseActionRunner):
     PLATFORM_MACOSX = 'mac'
 
     def __init__(self):
-        super(GaiatestDesktopActionRunner, self).__init__()
         os.environ['DESKTOPB2G_OS_PLATFORM'] = self.PLATFORM_LINUX_64
         os.environ['DESKTOPB2G_BRANCH'] = 'master'
         os.environ['GAIA_BRANCH'] = 'master'
@@ -23,6 +22,7 @@ class GaiatestDesktopActionRunner(BaseActionRunner):
         #group.add_argument('--tests', default='gaiatest/tests/functional/manifest.ini', help='test file, dir or manifest.')
         group.add_argument('--tests', default='gaia/tests/python/gaia-ui-tests/gaiatest/tests/functional/manifest.ini',
                            help='test file, dir or manifest.')
+        super(GaiatestDesktopActionRunner, self).__init__()
 
     def parse_options(self):
         super(GaiatestDesktopActionRunner, self).parse_options()

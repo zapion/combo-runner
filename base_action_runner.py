@@ -10,6 +10,7 @@ from argument_parser import RunTestParser
 class BaseActionRunner(object):
 
     action = action_decorator.action
+    parser = RunTestParser()
 
     def __init__(self):
         # setup logger
@@ -20,7 +21,7 @@ class BaseActionRunner(object):
         self.commands = []
         self.post_commands = []
         # parse the input options
-        self.parser = RunTestParser()
+        self.parse_options()
 
     def parse_options(self):
         self.options = self.parser.parse(sys.argv[1:])
