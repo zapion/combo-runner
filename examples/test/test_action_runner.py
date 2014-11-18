@@ -1,5 +1,5 @@
-import action_decorator
-from base_action_runner import BaseActionRunner
+from comborunner import action_decorator
+from comborunner.base_action_runner import BaseActionRunner
 
 
 class TestActionRunner(BaseActionRunner):
