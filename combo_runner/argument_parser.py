@@ -16,7 +16,7 @@ class RunTestParser(object):
         self.parser.add_argument('--settings', help='target build version')
 
     def parse(self, input):
-        return self.parser.parse_args(input)
+        return self.parser.parse_known_args(input)
 
     def print_help(self):
         return self.parser.print_help()
