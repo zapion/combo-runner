@@ -25,7 +25,7 @@ class BaseActionRunner(object):
         self.parse_options()
 
     def parse_options(self):
-        self.options = self.parser.parse(sys.argv[1:])
+        self.options, self.tests = self.parser.parse(sys.argv[1:])
         self._load_options()
 
     def _load_options(self):
