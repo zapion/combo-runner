@@ -6,6 +6,9 @@ import subprocess
 import action_decorator
 from argument_parser import RunTestParser
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
+
 
 class BaseActionRunner(object):
 
@@ -14,8 +17,6 @@ class BaseActionRunner(object):
 
     def __init__(self):
         # setup logger
-        self.logger = logging.getLogger(self.__class__.__name__)
-        logging.basicConfig(level=logging.DEBUG)
         # setup commands lists
         self.pre_commands = []
         self.commands = []
@@ -24,7 +25,7 @@ class BaseActionRunner(object):
         self.parse_options()
 
     def parse_options(self):
-        self.options = self.parser.parse(sys.argv[1:])
+        self.options, self.tests = self.parser.parse(sys.argv[1:])
         self._load_options()
 
     def _load_options(self):
@@ -35,17 +36,17 @@ class BaseActionRunner(object):
     def _load_settings_file(self, settings_file=None):
         # Loading settings file
         if settings_file is None:
-            self.logger.info('No settings file, run with default settings.')
+            logger.info('No settings file, run with default settings.')
             self.settings = {}
         else:
             if not os.path.exists(settings_file):
-                self.logger.warning('No %s file' % (settings_file,))
+                logger.warning('No %s file' % (settings_file,))
                 self.parser.print_help()
-            self.logger.info('Loading settings from %s' % (settings_file,))
+            logger.info('Loading settings from %s' % (settings_file,))
             self.settings = json.load(open(settings_file))
 
     def _run_command(self, cmd):
-        self.logger.info('Run [%s]\n' % (cmd, ))
+        logger.info('Run [%s]\n' % (cmd, ))
         if cmd.startswith('./') and cmd.endswith('.sh'):
             current_process = subprocess.Popen(['bash', '-c', "trap 'echo \"#####__EXIT__#####__EXIT__#####\"; env;' exit; source %s" % cmd],
                                                shell=False, stdout=subprocess.PIPE)
@@ -78,26 +79,26 @@ class BaseActionRunner(object):
 
     def run(self):
         pre_cmd_is_fail = False
-        self.logger.info('Section [PRE-Commands] Start...')
+        logger.info('Section [PRE-Commands] Start...')
         for cmd in self.pre_commands:
             # run command
             return_code, output, env_vars_list = self._run_command(cmd)
             # if return code is not ZERO, then skip to POST-Commands
             if return_code != 0:
                 pre_cmd_is_fail = True
-                self.logger.debug('PRE-Command [%s] return [%d], skip to POST commands.' % (cmd, return_code))
+                logger.debug('PRE-Command [%s] return [%d], skip to POST commands.' % (cmd, return_code))
                 break
-        self.logger.info('Section [PRE-Commands] End.')
+        logger.info('Section [PRE-Commands] End.')
 
         if not pre_cmd_is_fail:
-            self.logger.info('Section [Commands] Start...')
+            logger.info('Section [Commands] Start...')
             for cmd in self.commands:
                 # run command
                 return_code, output, env_vars_list = self._run_command(cmd)
-            self.logger.info('Section [Commands] End.')
+            logger.info('Section [Commands] End.')
 
-        self.logger.info('Section [POST-Commands] Start...')
+        logger.info('Section [POST-Commands] Start...')
         for cmd in self.post_commands:
             # run command
             return_code, output, env_vars_list = self._run_command(cmd)
-        self.logger.info('Section [POST-Commands] End.')
+        logger.info('Section [POST-Commands] End.')

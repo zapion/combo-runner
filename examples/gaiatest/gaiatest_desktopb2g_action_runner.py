@@ -71,14 +71,13 @@ class GaiatestDesktopActionRunner(BaseActionRunner):
         os.environ['DESKTOPB2G_BRANCH'] = desktopb2g_branch
         os.environ['GAIA_BRANCH'] = gaia_branch
 
-    @action
-    def desktopb2g_download(self, action=False):
-        if action:
-            self.pre_commands.append('./gaiatest_desktopb2g_download.sh')
+    @action(enabled=False)
+    def desktopb2g_download(self):
+        self.pre_commands.append('./gaiatest_desktopb2g_download.sh')
         return self
 
-    @action
-    def desktopb2g_run(self, action=False):
-        if action:
+    @action(enabled=False)
+    def desktopb2g_run(self):
+        if enabled:
             self.commands.append('./gaiatest_desktopb2g_run.sh')
         return self
