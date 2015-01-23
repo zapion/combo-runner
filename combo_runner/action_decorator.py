@@ -8,7 +8,7 @@ def action(enabled=True):
             if func.__name__ in self.settings:
                 if self.settings[func.__name__]:
                     logger.debug('Task [%s] is enabled.' % func.__name__)
-                    return func(self, enabled=True, **kwargs)
+                    return func(self, **kwargs)
                 else:
                     logger.debug('Task [%s] is disabled.' % func.__name__)
             else:
