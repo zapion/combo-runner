@@ -6,7 +6,7 @@ def action(enabled=True):
     def f_action(func):
         def func_wrapper(self, **kwargs):
             if func.__name__ in self.settings:
-                if self.settings[func.__name__]:
+                if self.settings[func.__name__]['enabled']:
                     logger.debug('Task [%s] is enabled.' % func.__name__)
                     return func(self, **kwargs)
                 else:
